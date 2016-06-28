@@ -1,0 +1,456 @@
+client_id: CLIENT_ID
+client_secret: CLIENT_SECRET
+redirect_uri: https://syncreview.net
+
+OAuth2
+
+https://account.box.com/api/oauth2/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=https://syncreview.net&state=security_token%3DKnhMJatFipTAnM0nHlZA
+
+Put ID/Password on browser, and find [AUTHORIZATION_CODE] in redirected uri.
+
+curl https://api.box.com/oauth2/token -d 'grant_type=authorization_code&code=AUTHORIZATION_CODE&client_id=CLIENT_ID&client_secret=CLIENT_SECRET' -X POST
+
+{
+  "access_token":"ACCESS_TOKEN",
+  "expires_in":3890,
+  "restricted_to":[],
+  "refresh_token":"REFRESH_TOKEN",
+  "token_type":"bearer"
+}
+
+GET ROOT:
+curl https://api.box.com/2.0/folders/0 -H "Authorization: Bearer ACCESS_TOKEN"
+
+{
+  "type":"folder",
+  "id":"0",
+  "sequence_id":null,
+  "etag":null,
+  "name":"\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb",
+  "created_at":null,
+  "modified_at":null,
+  "description":"",
+  "size":585587886,
+  "path_collection":
+  {
+    "total_count":0,
+    "entries":[]
+  },
+  "created_by":
+  {
+    "type":"user",
+    "id":"",
+    "name":"",
+    "login":""
+  },
+  "modified_by":
+  {
+    "type":"user",
+    "id":"261147321",
+    "name":"Ryo Watanabe",
+    "login":"path@rj9.so-net.ne.jp"
+  },
+  "trashed_at":null,
+  "purged_at":null,
+  "content_created_at":null,
+  "content_modified_at":null,
+  "owned_by":
+  {
+    "type":"user",
+    "id":"261147321",
+    "name":"Ryo Watanabe",
+    "login":"path@rj9.so-net.ne.jp"
+  },
+  "shared_link":null,
+  "folder_upload_email":null,
+  "parent":null,
+  "item_status":"active",
+  "item_collection":
+  {
+    "total_count":3,
+    "entries":
+    [
+      {
+        "type":"folder",
+        "id":"7721313577",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"CL2016_mixes"
+      },
+      {
+        "type":"folder",
+        "id":"8599980105",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"CL2016_src"
+      },
+      {
+        "type":"folder",
+        "id":"6614072405",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"rw 0.339 mix"
+      }
+    ],
+    "offset":0,
+    "limit":100,
+    "order":
+    [
+      {
+        "by":"type",
+        "direction":"ASC"
+      },
+      {
+        "by":"name",
+        "direction":"ASC"
+      }
+    ]
+  }
+}
+
+UPLOAD:
+curl https://upload.box.com/api/2.0/files/content -H "Authorization: Bearer ACCESS_TOKEN" -X POST -F attributes='{"name":"vm_nat.sh", "parent":{"id":"8599980105"}}' -F file=@vm_nat
+
+{
+  "total_count":1,
+  "entries":
+  [
+    {
+      "type":"file",
+      "id":"71886712677",
+      "file_version":
+      {
+        "type":"file_version",
+        "id":"75934879221",
+        "sha1":"55ddd54048d19f9abd83f2404cbf3b906c96fb69"
+      },
+      "sequence_id":"0",
+      "etag":"0",
+      "sha1":"55ddd54048d19f9abd83f2404cbf3b906c96fb69",
+      "name":"vm_nat.sh",
+      "description":"",
+      "size":1490,
+      "path_collection":
+      {
+        "total_count":2,
+        "entries":
+        [
+          {
+            "type":"folder",
+            "id":"0",
+            "sequence_id":null,
+            "etag":null,
+            "name":"\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb"
+          },
+          {
+            "type":"folder",
+            "id":"8599980105",
+            "sequence_id":"0",
+            "etag":"0",
+            "name":"CL2016_src"
+          }
+        ]
+      },
+      "created_at":"2016-06-27T21:54:50-07:00",
+      "modified_at":"2016-06-27T21:54:50-07:00",
+      "trashed_at":null,
+      "purged_at":null,
+      "content_created_at":"2016-06-27T21:54:50-07:00",
+      "content_modified_at":"2016-06-27T21:54:50-07:00",
+      "created_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "owned_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "shared_link":null,
+      "parent":
+      {
+        "type":"folder",
+        "id":"8599980105",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"CL2016_src"
+      },
+      "item_status":"active"
+    }
+  ]
+}
+
+UPDATE:
+curl https://upload.box.com/api/2.0/files/71886712677/content -H "Authorization: Bearer ACCESS_TOKEN" -X POST -F file=@vm_nat
+
+{
+  "total_count":1,
+  "entries":
+  [
+    {
+      "type":"file",
+      "id":"71886712677",
+      "file_version":
+      {
+        "type":"file_version",
+        "id":"75935541365",
+        "sha1":"b1179ff423c80706d32850c546387de73972bc36"
+      },
+      "sequence_id":"1",
+      "etag":"1",
+      "sha1":"b1179ff423c80706d32850c546387de73972bc36",
+      "name":"vm_nat.sh",
+      "description":"",
+      "size":1502,
+      "path_collection":
+      {
+        "total_count":2,
+        "entries":
+        [
+          {
+            "type":"folder",
+            "id":"0",
+            "sequence_id":null,
+            "etag":null,
+            "name":"\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb"
+          },
+          {
+            "type":"folder",
+            "id":"8599980105",
+            "sequence_id":"0",
+            "etag":"0",
+            "name":"CL2016_src"
+          }
+        ]
+      },
+      "created_at":"2016-06-27T21:54:50-07:00",
+      "modified_at":"2016-06-27T22:01:53-07:00",
+      "trashed_at":null,
+      "purged_at":null,
+      "content_created_at":"2016-06-27T21:54:50-07:00",
+      "content_modified_at":"2016-06-27T22:01:53-07:00",
+      "created_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "owned_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "shared_link":null,
+      "parent":
+      {
+        "type":"folder",
+        "id":"8599980105",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"CL2016_src"
+      },
+      "item_status":"active"
+    }
+  ]
+}
+
+VERSIONS:
+curl https://api.box.com/2.0/files/71886712677/versions -H "Authorization: Bearer ACCESS_TOKEN"
+
+{
+  "total_count":1,
+  "entries":
+  [
+    {
+      "type":"file_version",
+      "id":"75934879221",
+      "sha1":"55ddd54048d19f9abd83f2404cbf3b906c96fb69",
+      "name":"vm_nat.sh",
+      "size":1490,
+      "created_at":"2016-06-27T21:54:50-07:00",
+      "modified_at":"2016-06-27T21:54:50-07:00",
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "trashed_at":null,
+      "purged_at":null
+    }
+  ],
+  "limit":1000,
+  "offset":0
+}
+
+REFRESH TOKEN
+curl https://api.box.com/oauth2/token -d 'grant_type=refresh_token&refresh_token=REFRESH_TOKEN&client_id=CLIENT_ID&client_secret=CLIENT_SECRET' -X POST
+
+{
+  "access_token":"NEW_ACCESS_TOKEN",
+  "expires_in":3884,
+  "restricted_to":[],
+  "refresh_token":"REFRESH_TOKEN",
+  "token_type":"bearer"
+}
+
+DELETE VERSION - again
+curl https://api.box.com/2.0/files/71886712677/versions/75934879221 -H "Authorization: Bearer NEW_ACCESS_TOKEN" -X DELETE
+[No output]
+
+VERSIONS
+# curl https://api.box.com/2.0/files/71886712677/versions -H "Authorization: Bearer NEW_ACCESS_TOKEN"
+
+{
+  "total_count":2,
+  "entries":
+  [
+    {
+      "type":"file_version",
+      "id":"75935541365",
+      "sha1":"b1179ff423c80706d32850c546387de73972bc36",
+      "name":"vm_nat.sh",
+      "size":1502,
+      "created_at":"2016-06-27T22:01:53-07:00",
+      "modified_at":"2016-06-27T22:01:53-07:00",
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "trashed_at":null,
+      "purged_at":null
+    },
+    {
+      "type":"file_version",
+      "id":"75934879221",
+      "sha1":"55ddd54048d19f9abd83f2404cbf3b906c96fb69",
+      "name":"vm_nat.sh",
+      "size":1490,
+      "created_at":"2016-06-27T21:54:50-07:00",
+      "modified_at":"2016-06-27T21:54:50-07:00",
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "trashed_at":"2016-06-27T21:00:00-07:00",
+      "purged_at":"2016-07-27T21:00:00-07:00"
+    }
+  ],
+  "limit":1000,
+  "offset":0
+}
+
+QUERY
+curl https://api.box.com/2.0/search?query=vm_nat&file_extensions=sh&created_at_range=,2016-06-27T22:01:53-07:00 -H "Authorization: Bearer NEW_ACCESS_TOKEN"
+
+{
+  "total_count":1,
+  "entries":
+  [
+    {
+      "type":"file",
+      "id":"71886712677",
+      "file_version":
+      {
+        "type":"file_version",
+        "id":"75937461449",
+        "sha1":"8068299c88203127d2ff1a3f0513387c6c9799af"
+      },
+      "sequence_id":"2",
+      "etag":"2",
+      "sha1":"8068299c88203127d2ff1a3f0513387c6c9799af",
+      "name":"vm_nat.sh",
+      "description":"",
+      "size":1502,
+      "path_collection":
+      {
+        "total_count":2,
+        "entries":
+        [
+          {
+            "type":"folder",
+            "id":"0",
+            "sequence_id":null,
+            "etag":null,
+            "name":"\u3059\u3079\u3066\u306e\u30d5\u30a1\u30a4\u30eb"
+          },
+          {
+            "type":"folder",
+            "id":"8599980105",
+            "sequence_id":"0",
+            "etag":"0",
+            "name":"CL2016_src"
+          }
+        ]
+      },
+      "created_at":"2016-06-27T21:54:50-07:00",
+      "modified_at":"2016-06-27T22:22:22-07:00",
+      "trashed_at":null,
+      "purged_at":null,
+      "content_created_at":"2016-06-27T21:54:50-07:00",
+      "content_modified_at":"2016-06-27T22:22:22-07:00",
+      "created_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "modified_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "owned_by":
+      {
+        "type":"user",
+        "id":"261147321",
+        "name":"Ryo Watanabe",
+        "login":"path@rj9.so-net.ne.jp"
+      },
+      "shared_link":null,
+      "parent":
+      {
+        "type":"folder",
+        "id":"8599980105",
+        "sequence_id":"0",
+        "etag":"0",
+        "name":"CL2016_src"
+      },
+      "item_status":"active"
+    }
+  ],
+  "limit":30,"offset":0
+}
+
