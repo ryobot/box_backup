@@ -1,0 +1,6 @@
+#!/bin/sh
+
+FOLDER_NAME=$1
+TOKEN=`cat box_token.json | jq -r '.access_token'`
+QUERY=`echo ".entries[]|select(.name==\"$FOLDER_NAME\")|.id"`
+curl -s https://api.box.com/2.0/folders/0/items -H "Authorization: Bearer ${TOKEN}" | jq -r $QUERY

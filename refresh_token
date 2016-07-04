@@ -1,0 +1,9 @@
+#!/bin/sh
+
+REFRESH_TOKEN=`cat box_token.json | jq -r '.refresh_token'`
+CLIENT_ID=`cat box_client.json | jq -r '.client_id'`
+CLIENT_SECRET=`cat box_client.json | jq -r '.client_secret'`
+
+mv -f box_token.json box_token.bk
+BODY="grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}"
+curl -s https://api.box.com/oauth2/token -d ${BODY} -X POST | jq '.' > box_token.json
