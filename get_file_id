@@ -1,0 +1,18 @@
+#!/bin/sh
+
+FOLDER_ID=$1
+FILE_NAME=$2
+TOKEN=`cat box_token.json | jq -r '.access_token'`
+QUERY=`echo ".entries[]|select(.name==\"$FILE_NAME\")|.id"`
+HTTP_CODE=`curl -s https://api.box.com/2.0/folders/$FOLDER_ID/items -H "Authorization: Bearer ${TOKEN}" -w '%{http_code}\n' -o get_file_id_response`
+if [ $HTTP_CODE == 200 ] ; then
+  FILE_ID=`cat get_file_id_response | jq -r $QUERY`
+  if [ "$FILE_ID" == "" ] ; then
+    echo "ID Not Found."
+    exit 1
+  fi
+  echo $FILE_ID
+  exit 0
+fi
+echo "Error in get_file_id : http status code is $HTTP_CODE"
+exit 2
