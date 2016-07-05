@@ -3,4 +3,15 @@
 FOLDER_NAME=$1
 TOKEN=`cat box_token.json | jq -r '.access_token'`
 QUERY=`echo ".entries[]|select(.name==\"$FOLDER_NAME\")|.id"`
-curl -s https://api.box.com/2.0/folders/0/items -H "Authorization: Bearer ${TOKEN}" | jq -r $QUERY
+HTTP_CODE=`curl -s https://api.box.com/2.0/folders/0/items -H "Authorization: Bearer ${TOKEN}" -w '%{http_code}\n' -o get_folder_id_response`
+if [ $HTTP_CODE == 200 ] ; then
+  FOLDER_ID=`cat get_folder_id_response | jq -r $QUERY`
+  if [ "$FOLDER_ID" == "" ] ; then
+    echo "ID Not Found."
+    exit 1
+  fi
+  echo $FOLDER_ID
+  exit 0
+fi
+echo "Error in get_folder_id : http status code is $HTTP_CODE"
+exit 2

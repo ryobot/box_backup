@@ -1,0 +1,15 @@
+#!/bin/sh
+
+FOLDER_ID=$1
+FILE_PATH=$2
+FILE_NAME=$3
+echo "" > upload_file_response
+TOKEN=`cat box_token.json | jq -r '.access_token'`
+HTTP_CODE=`curl -s https://upload.box.com/api/2.0/files/content -H "Authorization: Bearer ${TOKEN}" -X POST -F attributes='{"name":"'$FILE_NAME'","parent":{"id":"'$FOLDER_ID'"}}' -F file=@$FILE_PATH -w '%{http_code}\n' -o upload_file_response`
+if [ $HTTP_CODE == 201 ] ; then
+  echo "File $FILE_PATH successfully uploaded as $FILE_NAME in folder $FOLDER_ID"
+  exit 0
+fi
+cat upload_file_response | jq '.'
+echo "Error in upload_file : http status code is $HTTP_CODE"
+exit 2

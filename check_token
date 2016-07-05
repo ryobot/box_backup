@@ -1,0 +1,14 @@
+#!/bin/sh
+
+TOKEN=`cat box_token.json | jq -r '.access_token'`
+HTTP_CODE=`curl -s https://api.box.com/2.0/folders/0/items -H "Authorization: Bearer ${TOKEN}" -w '%{http_code}\n' -o /dev/null`
+if [ $HTTP_CODE == 401 ] ; then
+  echo "Token has been expired."
+  exit 1
+elif [ $HTTP_CODE == 200 ] ; then
+  echo "Token is valid"
+  exit 0
+fi
+echo "Error in check_token : http status code is $HTTP_CODE"
+exit 2
+

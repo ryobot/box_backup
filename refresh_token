@@ -4,6 +4,15 @@ REFRESH_TOKEN=`cat box_token.json | jq -r '.refresh_token'`
 CLIENT_ID=`cat box_client.json | jq -r '.client_id'`
 CLIENT_SECRET=`cat box_client.json | jq -r '.client_secret'`
 
-mv -f box_token.json box_token.bk
 BODY="grant_type=refresh_token&refresh_token=${REFRESH_TOKEN}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}"
-curl -s https://api.box.com/oauth2/token -d ${BODY} -X POST | jq '.' > box_token.json
+HTTP_CODE=`curl -s https://api.box.com/oauth2/token -d ${BODY} -X POST -w '%{http_code}\n' -o refresh_token_response`
+if [ $HTTP_CODE == 200 ] ; then
+  mv -f box_token.json box_token.bk
+  cat refresh_token_response | jq '.' > box_token.json
+  echo "New token:"
+  cat box_token.json
+  exit 0
+fi
+echo "Error in refresh_token : http status code is $HTTP_CODE"
+exit 2
+
