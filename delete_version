@@ -1,0 +1,13 @@
+#!/bin/sh
+
+FILE_ID=$1
+VERSION_ID=$2
+TOKEN=`cat box_token.json | jq -r '.access_token'`
+HTTP_CODE=`curl -s https://api.box.com/2.0/files/$FILE_ID/versions/$VERSION_ID -H "Authorization: Bearer ${TOKEN}" -X DELETE  -w '%{http_code}\n' -o delete_version_response`
+if [ $HTTP_CODE == 204 ] ; then
+  echo "Version $VERSION_ID of file $FILE_ID successfully deleted."
+  exit 0
+fi
+cat delete_version_response | jq '.'
+echo "Error in delete_version : http status code is $HTTP_CODE"
+exit 2
