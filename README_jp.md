@@ -11,7 +11,7 @@ BOX ストレージを使ったファイルのバックアップスクリプト
 
 ####BOX の authrization code の取得
 
-- BOX のアカウントで新しいアプリを作り ```CLIENT_ID, CLIENT_SECRET, REDIRECT_URI(https)``` を確認します。REDIRECT_URI は ```https://localhost``` 等でよい。
+- BOX のアカウントで新しいアプリを作り ```CLIENT_ID```, ```CLIENT_SECRET```, ```REDIRECT_URI(https)``` を確認します。REDIRECT_URI は ```https://localhost``` 等でよい。
 
 - テキストエディタなどで下記 URI を作成します。
 
@@ -21,14 +21,14 @@ https://account.box.com/api/oauth2/authorize?response_type=code&client_id=CLIENT
 
 - ブラウザで URI にアクセスし BOX アカウントにログインします。
 
-- リダイレクト先の URI から ```code=AUTHORIZATION_CODE``` を見つけてコピーします。AUTORIZATION_CODE の有効期間は30秒なので急いで次の作業をします（あらかじめ用意しておく）。
+- リダイレクト先の URI から ```code=AUTHORIZATION_CODE``` を見つけてコピーします。```AUTORIZATION_CODE``` の有効期間は30秒なので急いで次の作業をします（あらかじめ用意しておく）。
 
 ####アクセストークン、リフレッシュトークンの取得
 
 ```
 curl https://api.box.com/oauth2/token -d 'grant_type=authorization_code&code=AUTHORIZATION_CODE&client_id=CLIENT_ID&client_secret=CLIENT_SECRET' -X POST
 ```
-上記の json 出力で```box_token.json```ファイルを上書きします。 ```box_client.json``` にも自分のアカウントの CLIENT_ID/CLIENT_SECRET を書き込みます。
+上記の json 出力で```box_token.json```ファイルを上書きします。 ```box_client.json``` にも自分のアカウントの ```CLIENT_ID```, ```CLIENT_SECRET``` を書き込みます。
 
 ####バックアップファイルのアップロード
 
