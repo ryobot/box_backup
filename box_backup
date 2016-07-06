@@ -1,0 +1,62 @@
+#!/bin/sh
+
+export PATH=$PATH:$BOX_BACKUP_DIR
+
+check_ret () {
+    if [ $1 == 0 ] ; then
+        return 0
+    fi
+    exit 1
+}
+
+while getopts ":p:n:f:v:IU" opt
+do
+    case ${opt} in
+    p ) FILE_PATH=${OPTARG} ;;
+    n ) FILE_NAME=${OPTARG} ;;
+    f ) FOLDER_NAME=${OPTARG} ;;
+    v ) NUM_VERSIONS=${OPTARG} ;;
+    I ) MODE=UPLOAD ;;
+    U ) MODE=UPDATE ;;
+    esac
+done
+
+if [ -z $FOLDER_NAME ] || [ -z $FILE_NAME ] || [ -z $FILE_PATH ] || [ -z $MODE ] ; then
+    echo "options: [-I|-U] -p [backnp file path] -n [BOX file name] -n [BOX folder name] ( -v [num versions to keep] )"
+    exit 1
+fi
+
+cd $BOX_BACKUP_DIR
+
+ret=check_token
+if [ $ret == 1 ] ; then
+    refresh_token
+    if [ $? != 0 ] ; then
+        exit 1
+    fi
+elif [ $ret == 2 ] ; then
+    exit 1
+fi
+
+if [ $MODE == "UPLOAD" ] ; then
+
+    FOLDER_ID=`get_folder_id $FOLDER_NAME`
+    check_ret $?
+    upload_file $FOLDER_ID $FILE_PATH $FILE_NAME
+
+else
+
+    if [ -z $NUM_VERSIONS ] ; then
+        echo "Versions num missing, use default=4."
+        NUM_VERSIONS=4
+    fi
+    FOLDER_ID=`get_folder_id $FOLDER_NAME`
+    FILE_ID=`get_file_id $FOLDER_ID $FILE_NAME`
+    check_ret $?
+    update_file $FILE_ID $FILE_PATH
+    check_ret $?
+    manage_old_versions $FILE_ID $NUM_VERSIONS
+
+fi
+
+exit 0
