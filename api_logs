@@ -1,10 +1,10 @@
 client_id: CLIENT_ID
 client_secret: CLIENT_SECRET
-redirect_uri: https://syncreview.net
+redirect_uri: https://localhost
 
 OAuth2
 
-https://account.box.com/api/oauth2/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=https://syncreview.net&state=security_token%3DKnhMJatFipTAnM0nHlZA
+https://account.box.com/api/oauth2/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=https://localhost&state=authentiation
 
 Put ID/Password on browser, and find [AUTHORIZATION_CODE] in redirected uri.
 
