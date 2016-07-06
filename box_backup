@@ -28,7 +28,8 @@ fi
 
 cd $BOX_BACKUP_DIR
 
-ret=check_token
+check_token
+ret=$?
 if [ $ret == 1 ] ; then
     refresh_token
     if [ $? != 0 ] ; then

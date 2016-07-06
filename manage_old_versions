@@ -7,7 +7,7 @@ HTTP_CODE=`curl -s https://api.box.com/2.0/files/$FILE_ID/versions -H "Authoriza
 if [ $HTTP_CODE == 200 ] ; then
   NUM_VERSIONS=`cat manage_old_versions_response | jq '.entries | map(select(.trashed_at==null)) | length'`
   while [ $NUM -lt $NUM_VERSIONS ] ; do
-    VERSION_ID=`cat manage_file_versions_response | jq -r ".entries[$NUM].id"`
+    VERSION_ID=`cat manage_old_versions_response | jq -r ".entries[$NUM].id"`
     delete_version $FILE_ID $VERSION_ID
     if [ $? != 0 ] ; then
         exit 1

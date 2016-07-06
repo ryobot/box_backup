@@ -1,9 +1,10 @@
 #!/bin/sh
 
-export BOX_BACKUP_DIR=/usr/local/box_backup
+export BOX_BACKUP_DIR=/var/www/html/box_backup
 LOGFILE=$BOX_BACKUP_DIR/bxbk_log
 ERRORFILE=$BOX_BACKUP_DIR/bxbk_error_log
 
 date >> $LOGFILE
 cd /var/log && tar zcvf /tmp/messages.tgz messages >> $LOGFILE 2>> $ERRORFILE
 $BOX_BACKUP_DIR/box_backup -U -p /tmp/messages.tgz -n messages.tgz -f Docs -v 2 >> $LOGFILE 2>> $ERRORFILE
+echo "Done." >> $LOGFILE
