@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export BOX_BACKUP_DIR=/var/www/html/box_backup
+export BOX_BACKUP_DIR=/usr/local/box_backup
 LOGFILE=$BOX_BACKUP_DIR/bxbk_log
 ERRORFILE=$BOX_BACKUP_DIR/bxbk_error_log
 
